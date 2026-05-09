@@ -12,15 +12,15 @@ We analyze our method both theoretically and numerically, using a case study pro
 
 ```
 GMM-SOC/
-├── src/                   # Source package
-│   ├── __init__.py        # Public API exports
-│   ├── gmm_sdp.py         # OCS via SDP + GMM SDE (main paper method)
-│   ├── nominal_ref.py     # Open-loop NLP + linearisation/discretisation
-│   ├── gmm_flow.py        # GSB with trivial dynamics, diagonal covariances
-│   ├── gmm_flow_fast.py   # Sparse-lambda variant of gmm_flow
-│   └── gmm_msb.py         # Multi-marginal Schrödinger Bridge
+├── src/                             # Source package
+│   ├── __init__.py                  # Public API exports
+│   ├── gmm_sdp.py                   # OCS via SDP + GMM SDE (main paper method)
+│   ├── nominal_ref.py               # Open-loop NLP + linearisation/discretisation
+│   ├── gmm_flow.py                  # GSB with trivial dynamics, diagonal covariances
+│   ├── gmm_flow_fast.py             # Sparse-lambda variant of gmm_flow
+│   └── gmm_msb.py                   # Multi-marginal Schrödinger Bridge
 ├── notebooks/
-│   └── exp1.ipynb         # Earth-to-Mars numerical experiment
+│   └── earth_mars_transfer.ipynb    # Earth-to-Mars numerical experiment
 └── README.md
 ```
 
