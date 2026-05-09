@@ -8,7 +8,7 @@ Under the assumption that the boundary distributions are well-approximated by a 
 Each OCS solution uses a local linearization around the mean trajectory connecting the initial and final GMM components.
 We analyze our method both theoretically and numerically, using a case study problem of Earth-to-Mars orbit transfer calculation.
 
-## Project Structure
+## Structure
 
 ```
 GMM-SOC/
