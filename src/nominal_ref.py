@@ -167,21 +167,16 @@ class OpenLoop:
         dv = -self.mu_nd * r / r_norm**3 + u
         return np.hstack((dr, dv))
 
-    def _rk4_step(self, x, u, dt):
-        """Single RK4 integration step."""
-
-        k1 = self._dynamics_nd(x, u)
-        k2 = self._dynamics_nd(x + 0.5 * dt * k1, u)
-        k3 = self._dynamics_nd(x + 0.5 * dt * k2, u)
-        k4 = self._dynamics_nd(x + dt * k3, u)
-        return x + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+    def _euler_step(self, x, u, dt):
+        """ Euler integration step: x_{k+1} = x_k + f(x_k, u_k) Δt"""
+        return x + self._dynamics_nd(x, u) * dt #
 
     def _propagate(self, controls):
         """Forward-propagate state under piece-wise constant control."""
         state = np.zeros((self.n, self.N))
         state[:, 0] = np.hstack((self.r0, self.v0))
         for k in range(self.N - 1):
-            state[:, k + 1] = self._rk4_step(state[:, k], controls[k], self.dt_grid[k])
+            state[:, k + 1] = self._euler_step(state[:, k], controls[k], self.dt_grid[k])
         return state
 
     def _boundary_constraint(self, u_flat):
