@@ -170,15 +170,11 @@ class OpenLoop:
     def _rk4_step(self, x, u, dt):
         """Single RK4 integration step."""
 
-        # k1 = self._dynamics_nd(x, u)
-        # k2 = self._dynamics_nd(x + 0.5 * dt * k1, u)
-        # k3 = self._dynamics_nd(x + 0.5 * dt * k2, u)
-        # k4 = self._dynamics_nd(x + dt * k3, u)
-        # return x + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
-
-        return x + dt * self._dynamics_nd(x, u)
-    
-
+        k1 = self._dynamics_nd(x, u)
+        k2 = self._dynamics_nd(x + 0.5 * dt * k1, u)
+        k3 = self._dynamics_nd(x + 0.5 * dt * k2, u)
+        k4 = self._dynamics_nd(x + dt * k3, u)
+        return x + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
 
     def _propagate(self, controls):
         """Forward-propagate state under piece-wise constant control."""
@@ -230,15 +226,10 @@ class OpenLoop:
             )))
 
     def _discretize(self):
-        """Exact discretization via matrix exponential (Van Loan method).
-
-        Also computes Euler–Maruyama diffusion matrices D_d = σ √Δt.
-        """
         self.A_d = []
         self.B_d = []
 
         for k in range(self.N - 1):
-            # Van Loan block matrix [A B; 0 0]
             M = np.zeros((self.n + self.m, self.n + self.m))
             M[:self.n, :self.n] = self.A_lin[k]
             M[:self.n, self.n:] = self.B_lin[k]
@@ -268,7 +259,7 @@ class OpenLoop:
     def solve(self):
         """Run the full solve pipeline: NLP → linearize → discretize."""
 
-        # --- NLP ---
+        # NLP
         result = sp.optimize.minimize(
             self._objective,
             self._initial_guess(),
@@ -283,7 +274,7 @@ class OpenLoop:
         self.u_ref = result.x.reshape((self.N - 1, self.m))
         self.x_ref = self._propagate(self.u_ref)
 
-        # --- Linearize & discretize ---
+        # Linearize & discretize
         self._linearize()
         self._discretize()
         self._ensure_contiguous()
